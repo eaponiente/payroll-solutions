@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\HolidaySeeder;
 use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RoleSeeder;
 use Database\Seeders\ShiftSeeder;
 use Database\Seeders\SssBracketSeeder;
 use Illuminate\Console\Command;
@@ -32,12 +33,11 @@ class PayrollSetupCommand extends Command
             'slug' => Str::slug($name),
         ]);
 
-        $this->call([
-            PermissionSeeder::class,
-            HolidaySeeder::class,
-            SssBracketSeeder::class,
-            ShiftSeeder::class,
-        ]);
+        $this->call(PermissionSeeder::class);
+        $this->call(HolidaySeeder::class);
+        $this->call(SssBracketSeeder::class);
+        $this->call(ShiftSeeder::class);
+        $this->call(RoleSeeder::class);
 
         $ownerRole = Role::create([
             'account_id' => $account->id,
@@ -53,26 +53,7 @@ class PayrollSetupCommand extends Command
         }
         $ownerRole->permissions()->attach($pivotData);
 
-        $staffRole = Role::create([
-            'account_id' => $account->id,
-            'name' => 'Staff',
-            'slug' => 'staff',
-        ]);
-
-        $staffPerms = Permission::whereIn('slug', [
-            'attendance.punch',
-            'attendance.view_own',
-            'overtime.submit',
-            'leaves.submit',
-            'corrections.submit',
-            'cash_advances.submit',
-        ])->get();
-
-        $staffPivot = [];
-        foreach ($staffPerms as $perm) {
-            $staffPivot[$perm->id] = ['scope' => 'self'];
-        }
-        $staffRole->permissions()->attach($staffPivot);
+        $staffRole = Role::where('account_id', $account->id)->where('slug', 'staff')->firstOrFail();
 
         $employee = Employee::create([
             'account_id' => $account->id,
