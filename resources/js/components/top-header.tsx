@@ -2,7 +2,6 @@ import { usePage } from '@inertiajs/react';
 import { Bell, Moon, Sun } from 'lucide-react';
 import { AccountSwitcher } from '@/components/account-switcher';
 import AppLogo from '@/components/app-logo';
-import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,13 +13,8 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useAppearance } from '@/hooks/use-appearance';
 import { useInitials } from '@/hooks/use-initials';
-import type { BreadcrumbItem } from '@/types';
 
-export function TopHeader({
-    breadcrumbs = [],
-}: {
-    breadcrumbs?: BreadcrumbItem[];
-}) {
+export function TopHeader() {
     const { auth } = usePage<{
         auth: { user: { name: string; avatar?: string } };
     }>().props;
@@ -36,8 +30,6 @@ export function TopHeader({
                 </div>
                 <AccountSwitcher />
             </div>
-
-            <Breadcrumbs breadcrumbs={breadcrumbs} />
 
             <div className="ml-auto flex items-center gap-1">
                 <Button

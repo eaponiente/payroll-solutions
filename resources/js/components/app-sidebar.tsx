@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
@@ -252,7 +251,7 @@ export function AppSidebar({ className }: { className?: string }) {
 
     return (
         <Sidebar collapsible="icon" variant="sidebar" className={className}>
-            <SidebarContent>
+            <SidebarContent className="pt-3">
                 <NavMain items={payrollNavItems} />
                 {attendanceNavItems.length > 0 && (
                     <NavMain items={attendanceNavItems} />
@@ -265,7 +264,6 @@ export function AppSidebar({ className }: { className?: string }) {
 
             <SidebarFooter>
                 <NavFooter items={footerNavItems} className="mt-auto" />
-                <NavUser />
             </SidebarFooter>
         </Sidebar>
     );
