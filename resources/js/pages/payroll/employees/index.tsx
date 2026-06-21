@@ -166,7 +166,7 @@ export default function EmployeesIndex({ employees }: Props) {
                                         key={employee.id}
                                         className="border-b hover:bg-muted/30"
                                     >
-                                        <td className="px-4 py-3 font-mono text-xs">
+                                        <td className="px-4 py-3 text-xs">
                                             {employee.employee_number}
                                         </td>
                                         <td className="px-4 py-3">

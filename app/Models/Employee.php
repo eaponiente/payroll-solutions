@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'pagibig_number',
     'tin_number',
     'leaves_used_this_year',
+    'paid_leaves_allowed',
     'notes',
 ])]
 class Employee extends Model
@@ -50,6 +51,7 @@ class Employee extends Model
             'end_date' => 'date',
             'current_daily_rate' => 'decimal:2',
             'leaves_used_this_year' => 'integer',
+            'paid_leaves_allowed' => 'integer',
             'account_id' => 'integer',
             'role_id' => 'integer',
         ];

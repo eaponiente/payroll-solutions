@@ -40,8 +40,8 @@ class LeaveController extends Controller
 
         $isPaid = $validated['leave_type'] !== 'unpaid';
 
-        if ($isPaid && $employee->leaves_used_this_year >= config('company.paid_leaves_per_year')) {
-            return back()->with('flash.warning', 'You have used all 5 paid leaves. This will be filed as unpaid leave unless overridden by admin.');
+        if ($isPaid && $employee->leaves_used_this_year >= $employee->paid_leaves_allowed) {
+            return back()->with('flash.warning', "You have used all {$employee->paid_leaves_allowed} paid leaves. This will be filed as unpaid leave unless overridden by admin.");
         }
 
         LeaveRequest::create([
@@ -67,7 +67,6 @@ class LeaveController extends Controller
             'approved_at' => now(),
         ]);
 
-        // Increment leave count for paid leaves
         $leaveEmployee = $leave->employee;
         if ($leave->is_paid) {
             $leaveEmployee->increment('leaves_used_this_year');

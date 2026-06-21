@@ -8,6 +8,7 @@ import {
     FileClock,
     Gift,
     HandCoins,
+    Home,
     LayoutGrid,
     Pencil,
     Settings,
@@ -24,6 +25,7 @@ import {
     SidebarContent,
     SidebarFooter,
 } from '@/components/ui/sidebar';
+import { dashboard } from '@/routes';
 import { index as sheetsIndex } from '@/routes/attendance/sheets';
 import { index as auditLogsIndex } from '@/routes/audit-logs';
 import { index as cashAdvancesIndex } from '@/routes/cash-advances';
@@ -58,6 +60,14 @@ export function AppSidebar({ className }: { className?: string }) {
 
     const has = (perm: string) => permissions.includes(perm);
 
+    const dashboardNavItems: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: dashboard(),
+            icon: Home,
+        },
+    ];
+
     const payrollChildren: NavItem[] = [];
 
     if (has('employees.view')) {
@@ -83,14 +93,7 @@ export function AppSidebar({ className }: { className?: string }) {
                       title: 'Payroll',
                       href: payrollIndex(),
                       icon: LayoutGrid,
-                      items: [
-                          {
-                              title: 'Dashboard',
-                              href: payrollIndex(),
-                              icon: LayoutGrid,
-                          },
-                          ...payrollChildren,
-                      ],
+                      items: payrollChildren,
                   },
               ]
             : [
@@ -252,6 +255,7 @@ export function AppSidebar({ className }: { className?: string }) {
     return (
         <Sidebar collapsible="icon" variant="sidebar" className={className}>
             <SidebarContent className="pt-3">
+                <NavMain items={dashboardNavItems} />
                 <NavMain items={payrollNavItems} />
                 {attendanceNavItems.length > 0 && (
                     <NavMain items={attendanceNavItems} />

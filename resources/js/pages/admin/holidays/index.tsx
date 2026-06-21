@@ -276,7 +276,7 @@ export default function HolidaysIndex({ holidays }: PageProps) {
                                             type="date"
                                             name="date"
                                             required
-                                            defaultValue={editingHoliday.date}
+                                            defaultValue={editingHoliday.date?.split('T')[0] ?? ''}
                                         />
                                         <InputError message={errors.date} />
                                     </div>

@@ -85,6 +85,7 @@ class EmployeeController extends Controller
             'role_id' => 'nullable|exists:roles,id',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
+            'paid_leaves_allowed' => 'nullable|integer|min:0|max:365',
             'schedule_start' => 'nullable|date_format:H:i',
             'schedule_end' => 'nullable|date_format:H:i',
             'rest_days' => 'nullable|array',
@@ -124,6 +125,7 @@ class EmployeeController extends Controller
                 'employee_number' => $employeeNumber,
                 'username' => $employeeNumber,
                 'status' => 'active',
+                'paid_leaves_allowed' => $validated['paid_leaves_allowed'] ?? 5,
             ]);
 
             if (! empty($validated['schedule_start'])) {
@@ -178,6 +180,7 @@ class EmployeeController extends Controller
             'hire_date' => 'nullable|date',
             'current_daily_rate' => 'nullable|numeric|min:0',
             'role_id' => 'nullable|exists:roles,id',
+            'paid_leaves_allowed' => 'nullable|integer|min:0|max:365',
         ]);
 
         $employee->update($validated);

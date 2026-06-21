@@ -44,6 +44,7 @@ type Employee = {
     hire_date: string;
     current_daily_rate: number;
     role_id: number | null;
+    paid_leaves_allowed: number;
     user: { id: number; email: string } | null;
 };
 
@@ -76,6 +77,7 @@ export default function EmployeeEdit({ employee, roles }: Props) {
         pagibig_number: employee.pagibig_number ?? '',
         tin_number: employee.tin_number ?? '',
         role_id: employee.role_id ? String(employee.role_id) : '',
+        paid_leaves_allowed: String(employee.paid_leaves_allowed ?? 5),
         email: employee.user?.email ?? '',
         password: '',
     });
@@ -311,6 +313,32 @@ export default function EmployeeEdit({ employee, roles }: Props) {
                                             <InputError
                                                 message={
                                                     errors.current_daily_rate
+                                                }
+                                            />
+                                        </div>
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="paid_leaves_allowed">
+                                                Paid Leaves / Year
+                                            </Label>
+                                            <Input
+                                                id="paid_leaves_allowed"
+                                                name="paid_leaves_allowed"
+                                                type="number"
+                                                min="0"
+                                                max="365"
+                                                value={
+                                                    formData.paid_leaves_allowed
+                                                }
+                                                onChange={(e) =>
+                                                    updateField(
+                                                        'paid_leaves_allowed',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                            />
+                                            <InputError
+                                                message={
+                                                    errors.paid_leaves_allowed
                                                 }
                                             />
                                         </div>

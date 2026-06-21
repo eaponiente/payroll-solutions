@@ -196,16 +196,16 @@ export default function DeMinimisIndex({ benefits, entries }: Props) {
                                             key={b.id}
                                             className="border-b last:border-0"
                                         >
-                                            <td className="py-3 font-medium">
+                                            <td className="py-3 pr-4 font-medium">
                                                 {b.name}
                                             </td>
-                                            <td className="py-3 text-right">
+                                            <td className="py-3 pr-4 text-right font-medium">
                                                 {fmt(b.default_amount)}
                                             </td>
-                                            <td className="py-3 capitalize">
+                                            <td className="py-3 pr-4 capitalize">
                                                 {b.frequency}
                                             </td>
-                                            <td className="py-3">
+                                            <td className="py-3 pr-4">
                                                 <Badge
                                                     variant={
                                                         b.is_active
@@ -285,17 +285,17 @@ export default function DeMinimisIndex({ benefits, entries }: Props) {
                                             key={e.id}
                                             className="border-b last:border-0"
                                         >
-                                            <td className="py-3">
+                                            <td className="py-3 pr-4">
                                                 {formatDate(e.date)}
                                             </td>
-                                            <td className="py-3">
+                                            <td className="py-3 pr-4">
                                                 {e.employee.first_name}{' '}
                                                 {e.employee.last_name}
                                             </td>
-                                            <td className="py-3">
+                                            <td className="py-3 pr-4">
                                                 {e.benefit?.name}
                                             </td>
-                                            <td className="py-3 text-right">
+                                            <td className="py-3 pr-4 text-right">
                                                 {fmt(e.amount)}
                                             </td>
                                             <td className="py-3">

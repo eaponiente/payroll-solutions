@@ -35,7 +35,7 @@ function emptyRow(): BracketRow {
         salary_max: '',
         employee_percentage: '',
         employer_percentage: '',
-        effective_from: '',
+        effective_from: new Date().toISOString().split('T')[0],
     };
 }
 
@@ -123,19 +123,19 @@ export default function SssBracketsIndex({ brackets }: PageProps) {
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="border-b text-left">
-                                    <th className="pb-3 font-medium text-muted-foreground">
+                                    <th className="px-4 pb-3 font-medium text-muted-foreground">
                                         Salary Min
                                     </th>
-                                    <th className="pb-3 font-medium text-muted-foreground">
+                                    <th className="px-4 pb-3 font-medium text-muted-foreground">
                                         Salary Max
                                     </th>
-                                    <th className="pb-3 text-right font-medium text-muted-foreground">
+                                    <th className="px-4 pb-3 text-right font-medium text-muted-foreground">
                                         Employee %
                                     </th>
-                                    <th className="pb-3 text-right font-medium text-muted-foreground">
+                                    <th className="px-4 pb-3 text-right font-medium text-muted-foreground">
                                         Employer %
                                     </th>
-                                    <th className="pb-3 font-medium text-muted-foreground">
+                                    <th className="px-4 pb-3 font-medium text-muted-foreground">
                                         Effective From
                                     </th>
                                 </tr>
@@ -146,19 +146,19 @@ export default function SssBracketsIndex({ brackets }: PageProps) {
                                         key={bracket.id}
                                         className="border-b last:border-0"
                                     >
-                                        <td className="py-3">
+                                        <td className="px-4 py-3">
                                             {bracket.salaryMinFmt}
                                         </td>
-                                        <td className="py-3">
+                                        <td className="px-4 py-3">
                                             {bracket.salaryMaxFmt}
                                         </td>
-                                        <td className="py-3 text-right">
+                                        <td className="px-4 py-3 text-right">
                                             {bracket.employee_percentage}%
                                         </td>
-                                        <td className="py-3 text-right">
+                                        <td className="px-4 py-3 text-right">
                                             {bracket.employer_percentage}%
                                         </td>
-                                        <td className="py-3">
+                                        <td className="px-4 py-3">
                                             {bracket.effectiveFromFmt}
                                         </td>
                                     </tr>
@@ -193,19 +193,19 @@ export default function SssBracketsIndex({ brackets }: PageProps) {
                                         <table className="w-full text-sm">
                                             <thead>
                                                 <tr className="border-b text-left">
-                                                    <th className="pb-3 font-medium text-muted-foreground">
+                                                    <th className="px-4 pb-3 font-medium text-muted-foreground">
                                                         Salary Min
                                                     </th>
-                                                    <th className="pb-3 font-medium text-muted-foreground">
+                                                    <th className="px-4 pb-3 font-medium text-muted-foreground">
                                                         Salary Max
                                                     </th>
-                                                    <th className="pb-3 font-medium text-muted-foreground">
+                                                    <th className="px-4 pb-3 font-medium text-muted-foreground">
                                                         Employee %
                                                     </th>
-                                                    <th className="pb-3 font-medium text-muted-foreground">
+                                                    <th className="px-4 pb-3 font-medium text-muted-foreground">
                                                         Employer %
                                                     </th>
-                                                    <th className="pb-3 font-medium text-muted-foreground">
+                                                    <th className="px-4 pb-3 font-medium text-muted-foreground">
                                                         Effective From
                                                     </th>
                                                     <th className="pb-3"></th>
@@ -217,7 +217,7 @@ export default function SssBracketsIndex({ brackets }: PageProps) {
                                                         key={i}
                                                         className="border-b last:border-0"
                                                     >
-                                                        <td className="py-2 pr-2">
+                                                        <td className="px-2 py-2">
                                                             <Input
                                                                 type="number"
                                                                 name={`brackets.${i}.salary_min`}
@@ -237,7 +237,7 @@ export default function SssBracketsIndex({ brackets }: PageProps) {
                                                                 required
                                                             />
                                                         </td>
-                                                        <td className="py-2 pr-2">
+                                                        <td className="px-2 py-2">
                                                             <Input
                                                                 type="number"
                                                                 name={`brackets.${i}.salary_max`}
@@ -257,7 +257,7 @@ export default function SssBracketsIndex({ brackets }: PageProps) {
                                                                 placeholder="∞"
                                                             />
                                                         </td>
-                                                        <td className="py-2 pr-2">
+                                                        <td className="px-2 py-2">
                                                             <Input
                                                                 type="number"
                                                                 name={`brackets.${i}.employee_percentage`}
@@ -277,7 +277,7 @@ export default function SssBracketsIndex({ brackets }: PageProps) {
                                                                 required
                                                             />
                                                         </td>
-                                                        <td className="py-2 pr-2">
+                                                        <td className="px-2 py-2">
                                                             <Input
                                                                 type="number"
                                                                 name={`brackets.${i}.employer_percentage`}
@@ -297,7 +297,7 @@ export default function SssBracketsIndex({ brackets }: PageProps) {
                                                                 required
                                                             />
                                                         </td>
-                                                        <td className="py-2 pr-2">
+                                                        <td className="px-2 py-2">
                                                             <Input
                                                                 type="date"
                                                                 name={`brackets.${i}.effective_from`}

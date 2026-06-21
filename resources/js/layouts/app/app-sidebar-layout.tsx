@@ -5,6 +5,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { ImpersonationBanner } from '@/components/impersonation-banner';
 import { TopHeader } from '@/components/top-header';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { useFlashToast } from '@/hooks/use-flash-toast';
 import type { AppLayoutProps } from '@/types';
 
 export default function AppSidebarLayout({
@@ -12,6 +13,7 @@ export default function AppSidebarLayout({
     breadcrumbs = [],
 }: AppLayoutProps) {
     const isOpen = usePage().props.sidebarOpen;
+    useFlashToast();
 
     return (
         <SidebarProvider defaultOpen={isOpen}>

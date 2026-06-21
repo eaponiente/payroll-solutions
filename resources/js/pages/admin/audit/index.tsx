@@ -209,7 +209,7 @@ export default function AuditLogIndex({ logs, filters }: Props) {
                                             key={log.id}
                                             className="border-b last:border-0 hover:bg-muted/30"
                                         >
-                                            <td className="py-3 pr-4 font-mono text-xs whitespace-nowrap text-muted-foreground">
+                                            <td className="py-3 pr-4 text-xs whitespace-nowrap text-muted-foreground">
                                                 {log.created_at_formatted}
                                             </td>
                                             <td className="py-3 pr-4">
@@ -219,7 +219,7 @@ export default function AuditLogIndex({ logs, filters }: Props) {
                                                 {actionBadge(log.action)}
                                             </td>
                                             <td className="py-3 pr-4">
-                                                <span className="font-mono text-xs text-muted-foreground">
+                                                <span className="text-xs text-muted-foreground">
                                                     {modelLabel(log.model_type)}
                                                 </span>
                                                 <span className="ml-1 text-xs text-muted-foreground">

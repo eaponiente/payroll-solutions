@@ -265,7 +265,7 @@ export default function EmployeeShow({ employee, deminimis_benefits }: Props) {
                                 <dt className="text-sm text-muted-foreground">
                                     Employee Number
                                 </dt>
-                                <dd className="font-mono">
+                                <dd>
                                     {employee.employee_number}
                                 </dd>
                             </div>

@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react';
 import { CreditCard, ShieldCheck, User } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
 import { useCurrentUrl } from '@/hooks/use-current-url';
+import { useFlashToast } from '@/hooks/use-flash-toast';
 import { cn } from '@/lib/utils';
 import { edit } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
@@ -26,6 +27,8 @@ const sidebarNavItems: NavItem[] = [
 ];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
+    useFlashToast();
+
     return (
         <div className="px-4 py-6">
             <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
