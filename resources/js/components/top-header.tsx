@@ -1,5 +1,7 @@
 import { usePage } from '@inertiajs/react';
-import { Bell, Moon, Search, Sun } from 'lucide-react';
+import { Bell, Moon, Sun } from 'lucide-react';
+import { AccountSwitcher } from '@/components/account-switcher';
+import AppLogo from '@/components/app-logo';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -26,26 +28,22 @@ export function TopHeader({
     const { appearance, updateAppearance } = useAppearance();
 
     return (
-        <header className="fixed top-0 right-0 left-0 z-50 flex h-[var(--header-height)] items-center gap-4 border-b border-sidebar-border/50 bg-white px-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:bg-card">
+        <header className="fixed top-0 right-0 left-0 z-50 flex h-[var(--header-height)] items-center gap-3 border-b border-sidebar-border bg-sidebar px-4">
             <div className="flex items-center gap-2">
-                <SidebarTrigger className="-ml-1" />
-                <Breadcrumbs breadcrumbs={breadcrumbs} />
+                <SidebarTrigger className="-ml-1 text-sidebar-foreground/70 hover:text-sidebar-foreground" />
+                <div className="flex items-center gap-2">
+                    <AppLogo />
+                </div>
+                <AccountSwitcher />
             </div>
+
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
 
             <div className="ml-auto flex items-center gap-1">
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="h-9 w-9 text-muted-foreground hover:text-foreground"
-                    aria-label="Search"
-                >
-                    <Search className="size-5" />
-                </Button>
-
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-9 w-9 text-muted-foreground hover:text-foreground"
+                    className="h-9 w-9 text-sidebar-foreground/70 hover:text-sidebar-foreground"
                     aria-label="Notifications"
                 >
                     <Bell className="size-5" />
@@ -54,7 +52,7 @@ export function TopHeader({
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="h-9 w-9 text-muted-foreground hover:text-foreground"
+                    className="h-9 w-9 text-sidebar-foreground/70 hover:text-sidebar-foreground"
                     onClick={() =>
                         updateAppearance(
                             appearance === 'dark' ? 'light' : 'dark',
@@ -77,7 +75,7 @@ export function TopHeader({
                                 className="ml-2 size-9 rounded-full p-0"
                             >
                                 <Avatar className="size-8">
-                                    <AvatarFallback className="bg-primary/10 text-xs font-medium text-primary">
+                                    <AvatarFallback className="bg-sidebar-primary-foreground/15 text-xs font-medium text-sidebar-foreground">
                                         {getInitials(auth.user.name ?? '')}
                                     </AvatarFallback>
                                 </Avatar>

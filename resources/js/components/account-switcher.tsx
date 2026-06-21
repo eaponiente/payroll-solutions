@@ -8,27 +8,19 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-type Props = {
-    variant?: 'header' | 'sidebar';
-};
-
-export function AccountSwitcher({ variant = 'header' }: Props) {
+export function AccountSwitcher() {
     const { props } = usePage();
     const { accounts, activeAccount, auth } = props;
 
     if (!auth.user?.is_super_admin || !accounts?.length) {
-        return (
-            <span className="text-xs text-red-400">
-                DBG: admin={String(auth.user?.is_super_admin)} n=
-                {accounts?.length ?? '-'}
-            </span>
-        );
+        return null;
     }
 
     const handleSwitch = (accountId: number) => {
         if (accountId === activeAccount?.id) {
             return;
         }
+
         const csrfToken = document
             .querySelector('meta[name="csrf-token"]')
             ?.getAttribute('content');
@@ -47,22 +39,17 @@ export function AccountSwitcher({ variant = 'header' }: Props) {
         });
     };
 
-    const colorClass =
-        variant === 'sidebar'
-            ? 'text-sidebar-foreground'
-            : 'text-primary-foreground/80 hover:text-primary-foreground';
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
-                    className={`flex items-center gap-2 ${colorClass}`}
+                    className="flex items-center gap-1.5 text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-foreground/10"
                 >
-                    <span className="max-w-32 truncate text-sm">
+                    <span className="max-w-32 truncate text-sm font-medium">
                         {activeAccount?.name ?? auth.user?.name}
                     </span>
-                    <ChevronsUpDown className="size-4" />
+                    <ChevronsUpDown className="size-3.5 opacity-60" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-52">
