@@ -46,7 +46,7 @@ class AuditLog extends Model
             return '';
         }
 
-        $tz = $this->account?->timezone ?? 'UTC';
+        $tz = $this->account?->timezone ?? 'Asia/Manila';
         $createdAt = $this->created_at->copy()->setTimezone($tz);
 
         $date = $createdAt->format('Y-m-d');

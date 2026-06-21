@@ -92,7 +92,7 @@ class AdminController extends Controller
             ->get()->pluck('value', 'key');
 
         $account = auth()->user()->employee->account;
-        $timezone = $account->timezone;
+        $timezone = $account->timezone ?? 'Asia/Manila';
         $scheduleType = $account->schedule_type;
 
         return Inertia::render('admin/config/index', compact('configs', 'timezone', 'scheduleType'));

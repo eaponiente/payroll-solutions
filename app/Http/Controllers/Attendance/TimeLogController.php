@@ -69,7 +69,7 @@ class TimeLogController extends Controller
 
         // Process attendance asynchronously (or synchronously for now)
         if ($type === 'out') {
-            $tz = $employee->account->timezone ?? 'UTC';
+            $tz = $employee->account->timezone ?? 'Asia/Manila';
             $this->attendanceService->processDailyAttendance($employee, $now->copy()->setTimezone($tz)->toDateString());
         }
 

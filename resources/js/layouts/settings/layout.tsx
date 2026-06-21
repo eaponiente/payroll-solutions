@@ -1,12 +1,8 @@
 import { Link } from '@inertiajs/react';
+import { CreditCard, ShieldCheck, User } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
-import { CreditCardIcon } from 'lucide-react';
-import Heading from '@/components/heading';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/hooks/use-current-url';
-import { cn, toUrl } from '@/lib/utils';
-import { edit as editAppearance } from '@/routes/appearance';
+import { cn } from '@/lib/utils';
 import { edit } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
 import type { NavItem } from '@/types';
@@ -15,70 +11,74 @@ const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: edit(),
-        icon: null,
+        icon: User,
     },
     {
         title: 'Security',
         href: editSecurity(),
-        icon: null,
-    },
-    {
-        title: 'Appearance',
-        href: editAppearance(),
-        icon: null,
+        icon: ShieldCheck,
     },
     {
         title: 'Subscription',
         href: '/settings/subscription',
-        icon: CreditCardIcon,
+        icon: CreditCard,
     },
 ];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
-    const { isCurrentOrParentUrl } = useCurrentUrl();
-
     return (
         <div className="px-4 py-6">
-            <Heading
-                title="Settings"
-                description="Manage your profile and account settings"
-            />
+            <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
+                <aside className="w-full shrink-0 lg:w-56">
+                    <div className="sticky top-[calc(var(--header-height)+1.5rem)]">
+                        <p className="mb-1 px-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                            Account
+                        </p>
+                        <nav
+                            className="flex flex-col gap-1"
+                            aria-label="Account settings"
+                        >
+                            {sidebarNavItems.slice(0, 2).map((item) => (
+                                <SettingsNavItem key={item.title} item={item} />
+                            ))}
+                        </nav>
 
-            <div className="flex flex-col lg:flex-row lg:space-x-12">
-                <aside className="w-full max-w-xl lg:w-48">
-                    <nav
-                        className="flex flex-col space-y-1 space-x-0"
-                        aria-label="Settings"
-                    >
-                        {sidebarNavItems.map((item, index) => (
-                            <Button
-                                key={`${toUrl(item.href)}-${index}`}
-                                size="sm"
-                                variant="ghost"
-                                asChild
-                                className={cn('w-full justify-start', {
-                                    'bg-muted': isCurrentOrParentUrl(item.href),
-                                })}
-                            >
-                                <Link href={item.href}>
-                                    {item.icon && (
-                                        <item.icon className="h-4 w-4" />
-                                    )}
-                                    {item.title}
-                                </Link>
-                            </Button>
-                        ))}
-                    </nav>
+                        <p className="mt-6 mb-1 px-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                            Billing
+                        </p>
+                        <nav
+                            className="flex flex-col gap-1"
+                            aria-label="Billing settings"
+                        >
+                            {sidebarNavItems.slice(2).map((item) => (
+                                <SettingsNavItem key={item.title} item={item} />
+                            ))}
+                        </nav>
+                    </div>
                 </aside>
 
-                <Separator className="my-6 lg:hidden" />
-
-                <div className="flex-1 md:max-w-2xl">
-                    <section className="max-w-xl space-y-12">
-                        {children}
-                    </section>
-                </div>
+                <div className="flex-1 space-y-6">{children}</div>
             </div>
         </div>
+    );
+}
+
+function SettingsNavItem({ item }: { item: NavItem }) {
+    const { isCurrentOrParentUrl } = useCurrentUrl();
+    const isActive = isCurrentOrParentUrl(item.href);
+
+    return (
+        <Link
+            href={item.href}
+            className={cn(
+                'flex items-center gap-3 rounded-md border-l-2 border-transparent px-3 py-2 text-sm font-medium transition-colors',
+                isActive
+                    ? 'border-primary bg-primary/5 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+            )}
+        >
+            {item.icon && <item.icon className="size-4" />}
+            <span>{item.title}</span>
+        </Link>
     );
 }

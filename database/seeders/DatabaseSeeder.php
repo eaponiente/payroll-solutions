@@ -13,8 +13,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             DeMinimisSeeder::class,
             EmployeeSeeder::class,
-            // DemoDataSeeder::class,
-            // DemoShiftSeeder::class,
+            AttendanceSeeder::class,
         ]);
     }
 }

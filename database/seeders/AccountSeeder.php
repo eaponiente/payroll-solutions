@@ -82,7 +82,7 @@ class AccountSeeder extends Seeder
             'email' => $email,
             'password' => Hash::make($password),
             'employee_id' => $employee->id,
-            'is_super_admin' => 1
+            'is_super_admin' => 1,
         ]);
 
         $account->users()->attach($user->id, ['is_owner' => true]);

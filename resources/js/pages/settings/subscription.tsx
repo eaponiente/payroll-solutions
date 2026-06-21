@@ -1,9 +1,15 @@
 import { Head } from '@inertiajs/react';
 import { CheckIcon, MinusIcon } from 'lucide-react';
-import Heading from '@/components/heading';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
 type Plan = {
@@ -99,35 +105,43 @@ export default function Subscription() {
         <>
             <Head title="Subscription plans" />
 
-            <h1 className="sr-only">Subscription plans</h1>
-
             <div className="space-y-6">
-                <Heading
-                    title="Subscription"
-                    description="Choose the plan that fits your business"
-                />
+                <div className="py-6 text-center">
+                    <h2 className="text-2xl font-semibold tracking-tight">
+                        Choose your plan
+                    </h2>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Simple, transparent pricing that grows with your team
+                    </p>
+                </div>
 
                 <div className="grid gap-6 md:grid-cols-3">
                     {plans.map((plan) => (
                         <Card
                             key={plan.key}
-                            className={cn('relative flex flex-col', {
-                                'border-primary ring-2 ring-primary':
-                                    plan.popular,
-                            })}
+                            className={cn(
+                                'relative flex flex-col transition-shadow',
+                                plan.popular &&
+                                    'z-10 shadow-lg ring-2 ring-primary md:scale-[1.02]',
+                                plan.current &&
+                                    !plan.popular &&
+                                    'border-primary/30 bg-primary/[0.02]',
+                            )}
                         >
                             {plan.popular && (
-                                <Badge className="absolute -top-2.5 left-1/2 -translate-x-1/2">
-                                    Most Popular
-                                </Badge>
+                                <div className="absolute inset-x-0 -top-3 mx-auto w-fit">
+                                    <Badge className="px-3 py-1 text-xs font-semibold">
+                                        Most Popular
+                                    </Badge>
+                                </div>
                             )}
 
-                            <CardHeader>
+                            <CardHeader className="pb-4 text-center">
                                 <CardTitle className="text-lg">
                                     {plan.name}
                                 </CardTitle>
-                                <div className="mt-2">
-                                    <span className="text-3xl font-bold">
+                                <div className="mt-3">
+                                    <span className="text-4xl font-bold tracking-tight">
                                         {plan.price}
                                     </span>
                                     <span className="text-sm text-muted-foreground">
@@ -139,21 +153,23 @@ export default function Subscription() {
                                 </p>
                             </CardHeader>
 
-                            <CardContent className="flex-1">
-                                <ul className="space-y-2.5">
+                            <Separator />
+
+                            <CardContent className="flex-1 pt-5">
+                                <ul className="space-y-3">
                                     {plan.features.map((feature) => (
                                         <li
                                             key={feature.name}
-                                            className="flex items-start gap-2 text-sm"
+                                            className="flex items-start gap-2.5 text-sm"
                                         >
                                             {feature.included ? (
-                                                <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
+                                                <CheckIcon className="mt-0.5 size-4 shrink-0 text-green-600" />
                                             ) : (
-                                                <MinusIcon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/40" />
+                                                <MinusIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground/30" />
                                             )}
                                             <span
                                                 className={cn({
-                                                    'text-muted-foreground':
+                                                    'text-muted-foreground line-through':
                                                         !feature.included,
                                                 })}
                                             >
@@ -164,7 +180,7 @@ export default function Subscription() {
                                 </ul>
                             </CardContent>
 
-                            <CardFooter>
+                            <CardFooter className="pt-2">
                                 <Button
                                     className="w-full"
                                     variant={

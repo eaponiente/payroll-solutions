@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Account;
 use App\Models\Employee;
-use App\Models\EmployeeSchedule;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -255,16 +254,6 @@ class EmployeeSeeder extends Seeder
 
             $account->users()->syncWithoutDetaching([$user->id]);
 
-            EmployeeSchedule::firstOrCreate(
-                ['employee_id' => $employee->id, 'effective_from' => $data['hire_date']],
-                [
-                    'account_id' => $account->id,
-                    'schedule_start' => '08:00',
-                    'schedule_end' => '17:00',
-                    'rest_days' => ['sunday'],
-                    'effective_from' => $data['hire_date'],
-                ],
-            );
         }
 
         $this->command?->info('EmployeeSeeder: 10 employees with all fields populated.');

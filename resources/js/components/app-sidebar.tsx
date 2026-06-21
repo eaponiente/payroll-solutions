@@ -5,7 +5,6 @@ import {
     CalendarHeart,
     CalendarRange,
     ClipboardCheck,
-    Clock,
     FileClock,
     Gift,
     HandCoins,
@@ -16,9 +15,10 @@ import {
     Timer,
     Umbrella,
     Users,
+    Wrench,
 } from 'lucide-react';
-import AppLogo from '@/components/app-logo';
 import { AccountSwitcher } from '@/components/account-switcher';
+import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -32,7 +32,6 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { my as myAttendance } from '@/routes/attendance';
 import { index as sheetsIndex } from '@/routes/attendance/sheets';
 import { index as auditLogsIndex } from '@/routes/audit-logs';
 import { index as cashAdvancesIndex } from '@/routes/cash-advances';
@@ -51,7 +50,7 @@ import { index as shiftsIndex } from '@/routes/shifts';
 import { index as sssBracketsIndex } from '@/routes/sss-brackets';
 import type { NavItem } from '@/types';
 
-export function AppSidebar() {
+export function AppSidebar({ className }: { className?: string }) {
     const { auth, scheduleType: st } = usePage<{
         auth: {
             user: {
@@ -67,26 +66,10 @@ export function AppSidebar() {
 
     const has = (perm: string) => permissions.includes(perm);
 
-    const myAttendanceNavItems: NavItem[] = [];
-
-    if (has('attendance.view_own') || has('attendance.punch')) {
-        myAttendanceNavItems.push({
-            title: 'My Attendance',
-            href: myAttendance(),
-            icon: Clock,
-        });
-    }
-
-    const payrollNavItems: NavItem[] = [
-        {
-            title: 'Payroll',
-            href: payrollIndex(),
-            icon: LayoutGrid,
-        },
-    ];
+    const payrollChildren: NavItem[] = [];
 
     if (has('employees.view')) {
-        payrollNavItems.push({
+        payrollChildren.push({
             title: 'Employees',
             href: employeesIndex(),
             icon: Users,
@@ -94,17 +77,42 @@ export function AppSidebar() {
     }
 
     if (has('payroll.view')) {
-        payrollNavItems.push({
+        payrollChildren.push({
             title: 'Periods',
             href: periodsIndex(),
             icon: CalendarRange,
         });
     }
 
-    const attendanceNavItems: NavItem[] = [];
+    const payrollNavItems: NavItem[] =
+        payrollChildren.length > 0
+            ? [
+                  {
+                      title: 'Payroll',
+                      href: payrollIndex(),
+                      icon: LayoutGrid,
+                      items: [
+                          {
+                              title: 'Dashboard',
+                              href: payrollIndex(),
+                              icon: LayoutGrid,
+                          },
+                          ...payrollChildren,
+                      ],
+                  },
+              ]
+            : [
+                  {
+                      title: 'Payroll',
+                      href: payrollIndex(),
+                      icon: LayoutGrid,
+                  },
+              ];
+
+    const attendanceChildren: NavItem[] = [];
 
     if (has('attendance.view_branch')) {
-        attendanceNavItems.push({
+        attendanceChildren.push({
             title: 'Sheets',
             href: sheetsIndex(),
             icon: ClipboardCheck,
@@ -112,7 +120,7 @@ export function AppSidebar() {
     }
 
     if (has('overtime.submit') || has('overtime.approve')) {
-        attendanceNavItems.push({
+        attendanceChildren.push({
             title: 'Overtime',
             href: overtimeIndex(),
             icon: Timer,
@@ -120,7 +128,7 @@ export function AppSidebar() {
     }
 
     if (has('leaves.submit') || has('leaves.approve')) {
-        attendanceNavItems.push({
+        attendanceChildren.push({
             title: 'Leaves',
             href: leaveIndex(),
             icon: Umbrella,
@@ -128,7 +136,7 @@ export function AppSidebar() {
     }
 
     if (has('corrections.submit') || has('corrections.approve')) {
-        attendanceNavItems.push({
+        attendanceChildren.push({
             title: 'Corrections',
             href: correctionsIndex(),
             icon: Pencil,
@@ -136,7 +144,7 @@ export function AppSidebar() {
     }
 
     if (has('cash_advances.submit') || has('cash_advances.approve')) {
-        attendanceNavItems.push({
+        attendanceChildren.push({
             title: 'Cash Advances',
             href: cashAdvancesIndex(),
             icon: HandCoins,
@@ -144,17 +152,29 @@ export function AppSidebar() {
     }
 
     if (has('fines.view')) {
-        attendanceNavItems.push({
+        attendanceChildren.push({
             title: 'Fines',
             href: finesIndex(),
             icon: Ban,
         });
     }
 
-    const adminNavItems: NavItem[] = [];
+    const attendanceNavItems: NavItem[] =
+        attendanceChildren.length > 0
+            ? [
+                  {
+                      title: 'Attendance',
+                      href: attendanceChildren[0].href,
+                      icon: ClipboardCheck,
+                      items: attendanceChildren,
+                  },
+              ]
+            : [];
+
+    const adminChildren: NavItem[] = [];
 
     if (has('admin.manage_shifts') && scheduleType === 'shifting') {
-        adminNavItems.push({
+        adminChildren.push({
             title: 'Shifts',
             href: shiftsIndex(),
             icon: CalendarDays,
@@ -162,11 +182,37 @@ export function AppSidebar() {
     }
 
     if (has('admin.manage_roles')) {
-        adminNavItems.push({ title: 'Roles', href: rolesIndex(), icon: Users });
+        adminChildren.push({
+            title: 'Roles',
+            href: rolesIndex(),
+            icon: Users,
+        });
     }
 
+    if (has('admin.manage_roles')) {
+        adminChildren.push({
+            title: 'Audit Logs',
+            href: auditLogsIndex(),
+            icon: FileClock,
+        });
+    }
+
+    const adminNavItems: NavItem[] =
+        adminChildren.length > 0
+            ? [
+                  {
+                      title: 'Admin',
+                      href: adminChildren[0].href,
+                      icon: Settings,
+                      items: adminChildren,
+                  },
+              ]
+            : [];
+
+    const configChildren: NavItem[] = [];
+
     if (has('admin.manage_holidays')) {
-        adminNavItems.push({
+        configChildren.push({
             title: 'Holidays',
             href: holidaysIndex(),
             icon: CalendarHeart,
@@ -174,7 +220,7 @@ export function AppSidebar() {
     }
 
     if (has('admin.manage_config')) {
-        adminNavItems.push({
+        configChildren.push({
             title: 'Config',
             href: configIndex(),
             icon: Settings,
@@ -182,7 +228,7 @@ export function AppSidebar() {
     }
 
     if (has('admin.manage_sss')) {
-        adminNavItems.push({
+        configChildren.push({
             title: 'SSS Brackets',
             href: sssBracketsIndex(),
             icon: Table,
@@ -190,25 +236,29 @@ export function AppSidebar() {
     }
 
     if (has('admin.manage_config')) {
-        adminNavItems.push({
+        configChildren.push({
             title: 'De Minimis',
             href: deminimisIndex(),
             icon: Gift,
         });
     }
 
-    if (has('admin.manage_roles')) {
-        adminNavItems.push({
-            title: 'Audit Logs',
-            href: auditLogsIndex(),
-            icon: FileClock,
-        });
-    }
+    const configNavItems: NavItem[] =
+        configChildren.length > 0
+            ? [
+                  {
+                      title: 'Configuration',
+                      href: configChildren[0].href,
+                      icon: Wrench,
+                      items: configChildren,
+                  },
+              ]
+            : [];
 
     const footerNavItems: NavItem[] = [];
 
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="icon" variant="sidebar" className={className}>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -225,15 +275,13 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                {myAttendanceNavItems.length > 0 && (
-                    <NavMain items={myAttendanceNavItems} />
-                )}
-                <NavMain items={payrollNavItems} label="Payroll" />
+                <NavMain items={payrollNavItems} />
                 {attendanceNavItems.length > 0 && (
-                    <NavMain items={attendanceNavItems} label="Attendance" />
+                    <NavMain items={attendanceNavItems} />
                 )}
-                {adminNavItems.length > 0 && (
-                    <NavMain items={adminNavItems} label="Account Settings" />
+                {adminNavItems.length > 0 && <NavMain items={adminNavItems} />}
+                {configNavItems.length > 0 && (
+                    <NavMain items={configNavItems} />
                 )}
             </SidebarContent>
 

@@ -1,9 +1,11 @@
 import { Form, Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
 import Heading from '@/components/heading';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDateFormatter } from '@/lib/date';
+import PayrollItemDialog from '@/pages/payroll/periods/payroll-item-dialog';
 import { approve, voidMethod, index, print } from '@/routes/payroll/periods';
 
 type Employee = {
@@ -16,8 +18,16 @@ type Employee = {
 type PeriodItem = {
     id: number;
     employee: Employee;
+    daily_rate: number;
+    total_regular_days: number;
+    absent_days: number;
+    holiday_days: number;
+    late_minutes: number;
+    undertime_minutes: number;
+    overtime_minutes: number;
     gross_pay: number;
     late_deduction: number;
+    undertime_deduction: number;
     overtime_pay: number;
     holiday_pay: number;
     night_differential_pay: number;
@@ -81,66 +91,38 @@ export default function PayrollPeriodShow({ period }: PageProps) {
         }
     };
 
+    const [selectedItem, setSelectedItem] = useState<PeriodItem | null>(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
+
     const totals = period.items.reduce(
         (acc, item) => ({
+            total_regular_days:
+                acc.total_regular_days +
+                Number(item.total_regular_days || 0),
+            absent_days:
+                acc.absent_days + Number(item.absent_days || 0),
+            holiday_days:
+                acc.holiday_days + Number(item.holiday_days || 0),
             gross_pay: acc.gross_pay + Number(item.gross_pay || 0),
-            late_deduction:
-                acc.late_deduction + Number(item.late_deduction || 0),
-            overtime_pay: acc.overtime_pay + Number(item.overtime_pay || 0),
-            holiday_pay: acc.holiday_pay + Number(item.holiday_pay || 0),
-            night_differential_pay:
-                acc.night_differential_pay +
-                Number(item.night_differential_pay || 0),
-            thirteenth_month_pay:
-                acc.thirteenth_month_pay +
-                Number(item.thirteenth_month_pay || 0),
-            deminimis_total:
-                acc.deminimis_total + Number(item.deminimis_total || 0),
-            retroactive_pay:
-                acc.retroactive_pay + Number(item.retroactive_pay || 0),
             sss_deduction: acc.sss_deduction + Number(item.sss_deduction || 0),
             philhealth_deduction:
                 acc.philhealth_deduction +
                 Number(item.philhealth_deduction || 0),
             pagibig_deduction:
                 acc.pagibig_deduction + Number(item.pagibig_deduction || 0),
-            fine_deduction:
-                acc.fine_deduction + Number(item.fine_deduction || 0),
-            cash_advance_deduction:
-                acc.cash_advance_deduction +
-                Number(item.cash_advance_deduction || 0),
-            other_deduction:
-                acc.other_deduction + Number(item.other_deduction || 0),
             net_pay: acc.net_pay + Number(item.net_pay || 0),
         }),
         {
+            total_regular_days: 0,
+            absent_days: 0,
+            holiday_days: 0,
             gross_pay: 0,
-            late_deduction: 0,
-            overtime_pay: 0,
-            holiday_pay: 0,
-            night_differential_pay: 0,
-            thirteenth_month_pay: 0,
-            deminimis_total: 0,
-            retroactive_pay: 0,
             sss_deduction: 0,
             philhealth_deduction: 0,
             pagibig_deduction: 0,
-            fine_deduction: 0,
-            cash_advance_deduction: 0,
-            other_deduction: 0,
             net_pay: 0,
         },
     );
-
-    const deductionColumns = [
-        { key: 'late_deduction' as const, label: 'Late' },
-        { key: 'sss_deduction' as const, label: 'SSS' },
-        { key: 'philhealth_deduction' as const, label: 'PhilHealth' },
-        { key: 'pagibig_deduction' as const, label: 'Pag-IBIG' },
-        { key: 'fine_deduction' as const, label: 'Fines' },
-        { key: 'cash_advance_deduction' as const, label: 'Cash Adv' },
-        { key: 'other_deduction' as const, label: 'Other' },
-    ];
 
     return (
         <>
@@ -254,34 +236,26 @@ export default function PayrollPeriodShow({ period }: PageProps) {
                                         Employee
                                     </th>
                                     <th className="pb-3 text-right font-medium text-muted-foreground">
+                                        Days
+                                    </th>
+                                    <th className="pb-3 text-right font-medium text-muted-foreground">
+                                        Absent
+                                    </th>
+                                    <th className="pb-3 text-right font-medium text-muted-foreground">
+                                        Hol
+                                    </th>
+                                    <th className="pb-3 text-right font-medium text-muted-foreground">
                                         Gross Pay
                                     </th>
                                     <th className="pb-3 text-right font-medium text-muted-foreground">
-                                        OT
+                                        SSS
                                     </th>
                                     <th className="pb-3 text-right font-medium text-muted-foreground">
-                                        Holiday
+                                        PhilHealth
                                     </th>
                                     <th className="pb-3 text-right font-medium text-muted-foreground">
-                                        Night Diff
+                                        Pag-IBIG
                                     </th>
-                                    <th className="pb-3 text-right font-medium text-muted-foreground">
-                                        13th Mo.
-                                    </th>
-                                    <th className="pb-3 text-right font-medium text-muted-foreground">
-                                        De Minimis
-                                    </th>
-                                    <th className="pb-3 text-right font-medium text-muted-foreground">
-                                        Retro
-                                    </th>
-                                    {deductionColumns.map((col) => (
-                                        <th
-                                            key={col.key}
-                                            className="pb-3 text-right font-medium text-muted-foreground"
-                                        >
-                                            {col.label}
-                                        </th>
-                                    ))}
                                     <th className="pb-3 text-right font-medium text-muted-foreground">
                                         Net Pay
                                     </th>
@@ -294,51 +268,44 @@ export default function PayrollPeriodShow({ period }: PageProps) {
                                         className="border-b last:border-0"
                                     >
                                         <td className="py-3">
-                                            <p className="font-medium">
-                                                {item.employee.first_name}{' '}
-                                                {item.employee.last_name}
-                                            </p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {item.employee.employee_number}
-                                            </p>
+                                            <button
+                                                type="button"
+                                                className="text-left hover:underline cursor-pointer"
+                                                onClick={() => {
+                                                    setSelectedItem(item);
+                                                    setDialogOpen(true);
+                                                }}
+                                            >
+                                                <p className="font-medium">
+                                                    {item.employee.first_name}{' '}
+                                                    {item.employee.last_name}
+                                                </p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {item.employee.employee_number}
+                                                </p>
+                                            </button>
+                                        </td>
+                                        <td className="py-3 text-right">
+                                            {item.total_regular_days}
+                                        </td>
+                                        <td className="py-3 text-right">
+                                            {item.absent_days}
+                                        </td>
+                                        <td className="py-3 text-right">
+                                            {item.holiday_days}
                                         </td>
                                         <td className="py-3 text-right">
                                             {formatCurrency(item.gross_pay)}
                                         </td>
                                         <td className="py-3 text-right">
-                                            {formatCurrency(item.overtime_pay)}
+                                            {formatCurrency(item.sss_deduction)}
                                         </td>
                                         <td className="py-3 text-right">
-                                            {formatCurrency(item.holiday_pay)}
+                                            {formatCurrency(item.philhealth_deduction)}
                                         </td>
                                         <td className="py-3 text-right">
-                                            {formatCurrency(
-                                                item.night_differential_pay,
-                                            )}
+                                            {formatCurrency(item.pagibig_deduction)}
                                         </td>
-                                        <td className="py-3 text-right">
-                                            {formatCurrency(
-                                                item.thirteenth_month_pay,
-                                            )}
-                                        </td>
-                                        <td className="py-3 text-right">
-                                            {formatCurrency(
-                                                item.deminimis_total,
-                                            )}
-                                        </td>
-                                        <td className="py-3 text-right">
-                                            {formatCurrency(
-                                                item.retroactive_pay,
-                                            )}
-                                        </td>
-                                        {deductionColumns.map((col) => (
-                                            <td
-                                                key={col.key}
-                                                className="py-3 text-right"
-                                            >
-                                                {formatCurrency(item[col.key])}
-                                            </td>
-                                        ))}
                                         <td className="py-3 text-right font-semibold">
                                             {formatCurrency(item.net_pay)}
                                         </td>
@@ -351,38 +318,26 @@ export default function PayrollPeriodShow({ period }: PageProps) {
                                         Totals
                                     </td>
                                     <td className="py-3 text-right font-semibold">
+                                        {totals.total_regular_days}
+                                    </td>
+                                    <td className="py-3 text-right font-semibold">
+                                        {totals.absent_days}
+                                    </td>
+                                    <td className="py-3 text-right font-semibold">
+                                        {totals.holiday_days}
+                                    </td>
+                                    <td className="py-3 text-right font-semibold">
                                         {formatCurrency(totals.gross_pay)}
                                     </td>
                                     <td className="py-3 text-right font-semibold">
-                                        {formatCurrency(totals.overtime_pay)}
+                                        {formatCurrency(totals.sss_deduction)}
                                     </td>
                                     <td className="py-3 text-right font-semibold">
-                                        {formatCurrency(totals.holiday_pay)}
+                                        {formatCurrency(totals.philhealth_deduction)}
                                     </td>
                                     <td className="py-3 text-right font-semibold">
-                                        {formatCurrency(
-                                            totals.night_differential_pay,
-                                        )}
+                                        {formatCurrency(totals.pagibig_deduction)}
                                     </td>
-                                    <td className="py-3 text-right font-semibold">
-                                        {formatCurrency(
-                                            totals.thirteenth_month_pay,
-                                        )}
-                                    </td>
-                                    <td className="py-3 text-right font-semibold">
-                                        {formatCurrency(totals.deminimis_total)}
-                                    </td>
-                                    <td className="py-3 text-right font-semibold">
-                                        {formatCurrency(totals.retroactive_pay)}
-                                    </td>
-                                    {deductionColumns.map((col) => (
-                                        <td
-                                            key={col.key}
-                                            className="py-3 text-right font-semibold"
-                                        >
-                                            {formatCurrency(totals[col.key])}
-                                        </td>
-                                    ))}
                                     <td className="py-3 text-right font-semibold">
                                         {formatCurrency(totals.net_pay)}
                                     </td>
@@ -392,6 +347,14 @@ export default function PayrollPeriodShow({ period }: PageProps) {
                     </div>
                 </CardContent>
             </Card>
+
+            <PayrollItemDialog
+                item={selectedItem}
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+                periodStart={period.period_start}
+                periodEnd={period.period_end}
+            />
         </>
     );
 }

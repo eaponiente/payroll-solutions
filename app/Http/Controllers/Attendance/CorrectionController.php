@@ -78,7 +78,7 @@ class CorrectionController extends Controller
             $employee = $correction->employee;
             $date = $correction->date;
             $dateStr = $date->toDateString();
-            $tz = $employee->account->timezone ?? 'UTC';
+            $tz = $employee->account->timezone ?? 'Asia/Manila';
 
             $log = null;
 

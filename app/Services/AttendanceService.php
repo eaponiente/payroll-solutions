@@ -17,7 +17,7 @@ class AttendanceService
     public function processDailyAttendance(Employee $employee, string $date): AttendanceSheet
     {
         $dateObj = Carbon::parse($date);
-        $tz = $employee->account->timezone ?? 'UTC';
+        $tz = $employee->account->timezone ?? 'Asia/Manila';
 
         $dayStart = Carbon::parse($date, $tz)->startOfDay()->setTimezone('UTC');
         $dayEnd = Carbon::parse($date, $tz)->endOfDay()->setTimezone('UTC');
@@ -55,7 +55,7 @@ class AttendanceService
         $dailyRate = (float) $employee->current_daily_rate;
         $hourlyRate = $dailyRate / 8;
         $date = Carbon::parse($sheet->date);
-        $tz = $employee->account->timezone ?? 'UTC';
+        $tz = $employee->account->timezone ?? 'Asia/Manila';
 
         $holiday = Holiday::whereDate('date', $date->toDateString())->first();
         $scheduleData = $this->getScheduleForDate($employee, $date);
@@ -163,7 +163,7 @@ class AttendanceService
         Collection $timeLogs,
         CarbonInterface $date,
     ): array {
-        $tz = $employee->account->timezone ?? 'UTC';
+        $tz = $employee->account->timezone ?? 'Asia/Manila';
         $scheduleStartTime = Carbon::parse($scheduleData['start_time'], $tz);
         $scheduleEndTime = Carbon::parse($scheduleData['end_time'], $tz);
 

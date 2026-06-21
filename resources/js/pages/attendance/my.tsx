@@ -244,7 +244,7 @@ export default function MyAttendance({
                                         variant="outline"
                                         disabled={processing}
                                     >
-                                        Lunch Out
+                                        Start Break
                                     </Button>
                                     <Button
                                         type="submit"
@@ -253,7 +253,7 @@ export default function MyAttendance({
                                         variant="outline"
                                         disabled={processing}
                                     >
-                                        Lunch In
+                                        End Break
                                     </Button>
                                 </div>
                             )}
